@@ -12,4 +12,5 @@ import javax.transaction.Transactional;
 @Transactional
 @Repository
 public interface UserRepository extends GenericRepository<User,Long> {
+	User findByUsername(String username);
 }
