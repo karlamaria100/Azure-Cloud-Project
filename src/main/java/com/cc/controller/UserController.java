@@ -1,7 +1,7 @@
 package com.cc.controller;
 
 import com.cc.model.User;
-import com.cc.service.SecurityService;
+import com.cc.service.SecurityServiceImpl;
 import com.cc.validator.UserValidator;
 import com.cc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
@@ -27,6 +25,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SecurityServiceImpl securityService;
+
+
+    @ResponseBody
     @RequestMapping(value = "/select",method = RequestMethod.GET)
     public Map<String,String> select(){
 //        userService.selectAll();
@@ -36,17 +39,17 @@ public class UserController {
     }
     
     //For Registration Process
-    
+    @ResponseBody
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(Model model) {
     	model.addAttribute("userForm", new User());
-    	
     	return "registration";
     }
-    
+
+    @ResponseBody
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String addUser(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
-    	userValidator.validate(userForm, bindingResult);
+    public String addUser(@RequestParam("userForm") User userForm, BindingResult bindingResult, Model model) {
+    	//userValidator.validate(userForm, bindingResult);
     	
     	if (bindingResult.hasErrors()) {
     		return "registration";
@@ -54,12 +57,12 @@ public class UserController {
     	
     	userService.saveUser(userForm);
     	
-    	securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
+    	securityService.autoLogin(userForm.getUsername(), userForm.getPassword());
     	
     	return "redirect:/welcome";
     }
     // For Login Process
-    
+    @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model, String error, String logout) {
         if (error != null)
@@ -70,7 +73,7 @@ public class UserController {
 
         return "login";
     }
-
+    @ResponseBody
     @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
     public String welcome(Model model) {
         return "welcome";

@@ -19,17 +19,16 @@ public class UserService extends AbstractService<User,Long> {
 
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public GenericRepository<User, Long> getDao() {
-        return null;
+        return userRepository;
     }
     
     public void saveUser(User user) {
     	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-    	
     	userRepository.save(user);
     }
     

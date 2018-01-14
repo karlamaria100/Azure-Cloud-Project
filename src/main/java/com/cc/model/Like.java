@@ -1,5 +1,6 @@
 package com.cc.model;
 
+
 import javax.persistence.*;
 
 /**

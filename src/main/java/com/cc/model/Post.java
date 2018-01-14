@@ -1,7 +1,6 @@
 package com.cc.model;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Date;
 import java.util.List;
 
